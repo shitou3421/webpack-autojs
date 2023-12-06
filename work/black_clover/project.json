@@ -1,0 +1,13 @@
+{
+    "name": "黑色五叶草_国际版",
+    "main": "main.js",
+    "ignore": [
+        "build"
+    ],
+    "launchConfig": {
+        "hideLogs": true
+    },
+    "packageName": "com.example.blackclover",
+    "versionName": "0.0.1",
+    "versionCode": 5
+}
