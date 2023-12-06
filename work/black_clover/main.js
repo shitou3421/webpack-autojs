@@ -1,25 +1,18 @@
 import game from '../../common/game'
 
 function main() {
-    game.launch("com.garena.game.bc");
-    game.logger("启动完成， 开始请求截屏权限");
-    var r = images.requestScreenCapture();
-    game.logger("截屏权限请求完成")
-    if (!r){
-        logger("获取截屏权限失败");
-        exit();
-    }
-    game.logger("获取屏幕信息");
-    let capt = images.captureScreen();
-    console.log(capt.getWidth() + 'x' + capt.getHeight());
-    console.log(device.width + '×' + device.height);
+    game.exec_init("com.garena.game.bc");
+
     agree();
+
+
 
 }
 
 
 function agree() {
     let agree = [
+        "agree",
         "autojs/443/511",
         "#ff8624",
         [
@@ -35,7 +28,7 @@ function agree() {
             [122, 0, "#ff8624"], 
             [64, 4, "#ff8625"]], 
             { 
-                region: [393, 455, 686, 600], 
+                // region: [393, 455, 686, 600], 
                 threshold: [26] }
             ]
     game.logger("调用查找color方法");    
