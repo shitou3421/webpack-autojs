@@ -40,6 +40,7 @@ var color = class {
 };
 
 
+
 class WaitResultType {
     static success = new WaitResultType();
     static fail = new WaitResultType();
@@ -79,7 +80,9 @@ game.logger = function (str) {
 // 处理手机路径与项目路径不一致的问题
 game.path = function (path_str) {
     // var cwd_path = files.cwd();
-    abs_path = files.path(path_str)
+    game.logger("文件在项目中相对路径为：" + path_str);
+    abs_path = files.path(path_str);
+    game.logger("文件在手机中绝对路径为：" + abs_path);
     return abs_path;
 }
 
@@ -108,8 +111,13 @@ game.wait = function (obj, timeout) {
         game.logger("对象是pic类");
         var img = images.read(obj.path);
         //循环查找
+        game.logger("开始循环查找: " + obj.path);
         while (Date.parse(new Date()) - start_wait < timeout) {
-            var p = images.findImage(images.captureScreen(), img);
+            game.logger("开始截取图片");
+            var t_images = images.captureScreen();
+            game.logger("截图完成");
+            var p = images.findImage(t_images, img);
+            game.logger("图片查找完成");
             if (p) {
                 break;
             }
@@ -161,10 +169,11 @@ game.wait = function (obj, timeout) {
 game.find_by_pic_click = function (path, timeout = game.find_timeout) {
     // 传递图片路径
     var p = new pic(path);
+    game.logger("开始查找图片："+ p.path);
     var r = game.wait(p, timeout = timeout);
     if (r) {
         game.logger("成功找到图片【" + path + "】，执行点击操作");
-        click(r);
+        click(r.x, r.y);
     } else {
         game.logger("查找图片【" + path + "】超时, 在" + timeout + "毫秒内没有找到");
     }
@@ -177,11 +186,7 @@ game.find_by_color = function (color_arr, timeout = game.find_timeout) {
     game.logger("调用等待方法");
     var r = game.wait(color_obj, timeout = timeout);
     if (r) {
-        game.logger("成功找到颜色组，执行点击操作, 连续点击三次");
-        click(r.x, r.y);
-        sleep(200);
-        click(r.x, r.y);
-        sleep(200);
+        game.logger("成功找到颜色组，执行点击操作, 进行点击操作");
         click(r.x, r.y);
     } else {
         game.logger("查找颜色组超时, 在" + timeout + "毫秒内没有找到");
@@ -189,10 +194,11 @@ game.find_by_color = function (color_arr, timeout = game.find_timeout) {
 }
 
 //滑动操作
-game.swipe = function (pos1, pos2, duration) {
-    game.logger("进行滑动操作：(" + pos1.x + ", " + pos1.y + ")" + "==>" + "(" + pos2.x + ", " + pos2.y + "), 持续时间(毫秒)为：" + duration + "滑动前后会等待2秒");
+game.swipe = function (pos1_x, pos1_y, pos2_x, pos2_y, duration) {
+    game.logger("进行滑动操作：(" + pos1_x + ", " + pos1_y + ")" + "==>" + "(" + pos2_x + ", " + pos2_y + "), 持续时间(毫秒)为：" + duration + "滑动前后会等待2秒");
     sleep(2000);
-    swipe(pos1.x, pos1.y, pos2.x, pos2.y, duration);
+    swipe(pos1_x, pos1_y, pos2_x, pos2_y, duration);
+    // RootAutomator.swipe(pos1.x, pos1.y, pos2.x, pos2.y, duration);
     sleep(2000);
 }
 
@@ -206,6 +212,7 @@ game.clear_game_data = function (path_arr) {
     }
 
 }
+
 
 // 获取远端游戏数据
 game.get_remote_game_data = function(){
